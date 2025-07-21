@@ -50,6 +50,36 @@ export const registerUser = (reqData) => async (dispatch) => {
   }
 };
 
+export const registerUserGoogle = (reqData) => async (dispatch) => {
+  dispatch({ type: REGISTER_REQUEST });
+
+  try {
+    const { data } = await axios.post(`${API_URL}/auth/google`, reqData.userData);
+
+    if (data.jwt) localStorage.setItem("jwt", data.jwt);
+
+    switch (data.role) {
+      case "ROLE_RESTAURANT_OWNER":
+        reqData.navigate("/admin/restaurants");
+        break;
+      case "ROLE_DELIVERY_PARTNER":
+        reqData.navigate("/partner/home");
+        break;
+      case "ROLE_CUSTOMER":
+      default:
+        reqData.navigate("/my-profile");
+        break;
+    }
+
+    dispatch({ type: REGISTER_SUCCESS, payload: data.jwt });
+    console.log("Google auth success", data);
+
+  } catch (error) {
+    dispatch({ type: REGISTER_FAILURE, payload: error.message });
+    console.error("Google auth error:", error);
+  }
+};
+
 // LOGIN USER
 export const loginUser = (reqData) => async (dispatch) => {
   dispatch({ type: LOGIN_REQUEST });

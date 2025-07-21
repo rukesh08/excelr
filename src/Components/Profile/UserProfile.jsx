@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 const UserProfile = () => {
     const dispatch = useDispatch();
     const navigate=useNavigate();
-    // Get user payload from Redux store
+
     const user = useSelector((state) => state.auth.user); // adjust `auth.user` as per your store
 
     console.log("User payload:", user); // Log user payload
@@ -16,7 +16,6 @@ const UserProfile = () => {
     const handleLogout = () => {
         dispatch(logout());
         navigate("/")
-        // optional: redirect to login
     }
 
     return (

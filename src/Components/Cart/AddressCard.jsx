@@ -12,8 +12,9 @@ const AddressCard = ({item,showButton,handleSelectAddress}) => {
             <h1 className='font-semibold text-lg text-white'>
               Home
             </h1>
-            <p >
-              Kukatpally 2nd Phase, Allwyn Colony, Kukatp,500018,Hyderabad,India
+            <p>
+              {item.fullName && <span>{item.fullName}, </span>}
+              {item.streetAddress}, {item.city}, {item.state} - {item.pincode}
             </p>
             {showButton && (<Button variant='outlined' fullWidth onClick={()=>handleSelectAddress(item)}>select</Button>)}
           </div>

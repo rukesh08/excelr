@@ -6,7 +6,6 @@ import AddLocationAltIcon from '@mui/icons-material/AddLocationAlt';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
 import { createOrder } from '../State/Order/Action';
-// import * as Yup from "yup";
 
 export const style = {
   position: 'absolute',
@@ -26,18 +25,52 @@ const initialValues={
     pincode:'',
     city:""
 }
-// const validationSchema=Yup.object.shape({
-//     streetAddress:Yup.string().required("Street address is required"),
-//     state:Yup.string().required("State is required"),
-//     pincode:Yup.required("Pincode is required"),
-//     city:Yup.string().required("City is required")
-// })
+const addressList = [
+  {
+    streetAddress: "123 MG Road",
+    city: "Bangalore",
+    state: "Karnataka",
+    pincode: "560001"
+  },
+  {
+    streetAddress: "456 JP Nagar",
+    city: "Bangalore",
+    state: "Karnataka",
+    pincode: "560078"
+  }
+];
+
 const items=[1,1]
 
 export const Cart = () => {
-    const createOrderUsingSeletedAddress=()=>{
+    const createOrderUsingSeletedAddress = (address) => {
+    const jwt = localStorage.getItem("jwt");
+    const restaurantId = cart?.cartItems?.[0]?.food?.restaurant?.id;
 
+    if (!restaurantId) {
+        alert("Unable to place order: Restaurant ID missing.");
+        return;
     }
+
+    const data = {
+        jwt,
+        order: {
+        restaurantId,
+        deliveryAddress: {
+            fullName: auth.user?.fullName,
+            streetAddress: address.streetAddress,
+            city: address.city,
+            state: address.state,
+            postalCode: address.pincode,
+            country: "India"
+        }
+        }
+    };
+
+    console.log("Order from selected address:", data);
+    dispatch(createOrder(data));
+    };
+
     const dispatch=useDispatch();
     
     const {cart,auth} =useSelector(store=>store)
@@ -69,6 +102,7 @@ export const Cart = () => {
   };
   console.log("Sending order payload:", data);
   dispatch(createOrder(data));
+
 };
 
   return (
@@ -112,7 +146,10 @@ export const Cart = () => {
                         Choose your delivery address
                     </h1>
                     <div className='flex gap-5 flex-wrap justify-center'>
-                        {[1,1,1,1,1].map((item)=><AddressCard handleSelectAddress={createOrderUsingSeletedAddress} item={item} showButton={true}/>)}
+                        {addressList.map((item) => (
+                            <AddressCard handleSelectAddress={() => createOrderUsingSeletedAddress(item)} item={item} showButton={true} />
+                        ))}
+
 
                         <Card className="w-full max-w-xs p-4 bg-[#1e1e1e] text-white flex flex-col justify-between">
                             <div className='flex items-start gap-3'>

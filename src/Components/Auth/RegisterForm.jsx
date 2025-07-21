@@ -15,7 +15,7 @@ import { useNavigate } from 'react-router-dom';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { useDispatch } from 'react-redux';
-import { registerUser } from '../State/Authentication/Action';
+import { registerUser, registerUserGoogle } from '../State/Authentication/Action';
 import { useEffect } from 'react'; 
 import { jwtDecode } from 'jwt-decode';
 
@@ -55,19 +55,15 @@ const RegisterForm = () => {
     }, []);
 
        const handleGoogleCallback = (response) => {
-        const decoded = jwtDecode(response.credential);
-        console.log("Google decoded data:", decoded);
-
-        
-        const userData = {
-            fullName: decoded.name,
-            email: decoded.email,
-            password: decoded.sub, 
-            role: "ROLE_CUSTOMER", 
-        };
-        console.log("Registering via Google:", userData);
-        dispatch(registerUser({ userData, navigate }));
-    };
+  const decoded = jwtDecode(response.credential);
+  const userData = {
+    fullName: decoded.name,
+    email: decoded.email,
+    password: decoded.sub,
+    role: "ROLE_CUSTOMER",
+  };
+  dispatch(registerUserGoogle({ userData, navigate }));
+};
 
     return (
         <div>
