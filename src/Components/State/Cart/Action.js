@@ -39,78 +39,93 @@ export const getAllCartItems=(reqData)=> {
     };
 };
 
-export const addItemToCart=(reqData)=> {
-    return async (dispatch)=>{
-        dispatch({type:ADD_ITEM_TO_CART_REQUEST});
+export const addItemToCart = (reqData) => {
+    return async (dispatch) => {
+        dispatch({ type: ADD_ITEM_TO_CART_REQUEST });
         try {
-            const { data } =await api.put(`/api/cart/add`,reqData.cartItem,
-            {
+            const { data } = await api.put(`/api/cart/add`, reqData.cartItem, {
                 headers: {
                     Authorization: `Bearer ${reqData.token}`,
                 },
             });
-            console.log("add item to cart ",data);
-            dispatch({type:ADD_ITEM_TO_CART_SUCCESS,payload:data});
-        }catch (error){
-            console.log("catch error",error);
-            dispatch({type:ADD_ITEM_TO_CART_FAILURE,payload:error.message});
+            console.log("add item to cart ", data);
+
+            dispatch({ type: ADD_ITEM_TO_CART_SUCCESS, payload: data });
+
+            // 🔁 REFRESH CART
+            dispatch(findCart(reqData.token));
+
+        } catch (error) {
+            console.log("catch error", error);
+            dispatch({ type: ADD_ITEM_TO_CART_FAILURE, payload: error.message });
         }
     };
 };
 
-export const updateCartItem=(reqData)=> {
-    return async (dispatch)=>{
-        dispatch({type:UPDATE_CARTITEM_REQUEST});
+export const updateCartItem = (reqData) => {
+    return async (dispatch) => {
+        dispatch({ type: UPDATE_CARTITEM_REQUEST });
         try {
-            const { data } =await api.put(`/api/cart-item/update`,reqData.data,
-            {
+            const { data } = await api.put(`/api/cart-item/update`, reqData.data, {
                 headers: {
                     Authorization: `Bearer ${reqData.jwt}`,
                 },
             });
-            console.log("update cartItem ",data);
-            dispatch({type:UPDATE_CARTITEM_SUCCESS,payload:data});
-        }catch (error){
-            console.log("catch error",error);
-            dispatch({type:UPDATE_CARTITEM_FAILURE,payload:error.message});
+            console.log("update cartItem ", data);
+            dispatch({ type: UPDATE_CARTITEM_SUCCESS, payload: data });
+
+            // 🔁 REFRESH CART
+            dispatch(findCart(reqData.jwt));
+
+        } catch (error) {
+            console.log("catch error", error);
+            dispatch({ type: UPDATE_CARTITEM_FAILURE, payload: error.message });
         }
     };
 };
 
-export const removeCartItem=({cartItemId,jwt})=> {
-    return async (dispatch)=>{
-        dispatch({type:REMOVE_CARTITEM_REQUEST});
+
+export const removeCartItem = ({ cartItemId, jwt }) => {
+    return async (dispatch) => {
+        dispatch({ type: REMOVE_CARTITEM_REQUEST });
         try {
-            const { data } =await api.delete(`/api/cart-item/${cartItemId}/remove`,
-            {
+            const { data } = await api.delete(`/api/cart-item/${cartItemId}/remove`, {
                 headers: {
                     Authorization: `Bearer ${jwt}`,
                 },
             });
-            console.log("remove cartItem ",data);
-            dispatch({type:REMOVE_CARTITEM_SUCCESS,payload:cartItemId});
-        }catch (error){
-            console.log("catch error",error);
-            dispatch({type:REMOVE_CARTITEM_FAILURE,payload:error.message});
+            console.log("remove cartItem ", data);
+            dispatch({ type: REMOVE_CARTITEM_SUCCESS, payload: cartItemId });
+
+            // 🔁 REFRESH CART
+            dispatch(findCart(jwt));
+
+        } catch (error) {
+            console.log("catch error", error);
+            dispatch({ type: REMOVE_CARTITEM_FAILURE, payload: error.message });
         }
     };
 };
 
-export const clearCartAction=()=> {
-    return async (dispatch)=>{
-        dispatch({type:CLEARE_CART_REQUEST});
+
+export const clearCartAction = () => {
+    return async (dispatch) => {
+        dispatch({ type: CLEARE_CART_REQUEST });
         try {
-            const { data } =await api.put(`/api/cart/clear`,{},
-            {
+            const { data } = await api.put(`/api/cart/clear`, {}, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("jwt")}`,
                 },
             });
-            console.log("clear cart ",data);
-            dispatch({type:CLEARE_CART_SUCCESS,payload:data});
-        }catch (error){
-            console.log("catch error",error);
-            dispatch({type:CLEARE_CART_FAILURE,payload:error.message});
+            console.log("clear cart ", data);
+            dispatch({ type: CLEARE_CART_SUCCESS, payload: data });
+
+            // 🔁 REFRESH CART
+            dispatch(findCart(localStorage.getItem("jwt")));
+
+        } catch (error) {
+            console.log("catch error", error);
+            dispatch({ type: CLEARE_CART_FAILURE, payload: error.message });
         }
     };
 };

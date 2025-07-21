@@ -12,6 +12,8 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUser } from './Components/State/Authentication/Action';
 import { findCart } from './Components/State/Cart/Action';
+import Routers from './Routers/Routers';
+import { getRestaurantByUserId } from './Components/State/Restaurant/Action';
 
 function App() {
 
@@ -21,12 +23,16 @@ function App() {
   useEffect(()=>{
       dispatch(getUser(auth.jwt || jwt));
       dispatch(findCart(jwt))
-  },[auth.jwt])
+  },[auth.jwt]);
+
+  useEffect(()=>{
+    dispatch(getRestaurantByUserId(auth.jwt || jwt))
+  },[auth.user])
   return (
     <ThemeProvider theme={darkTheme} >
       <CssBaseline />
      
-      <CoustomerRoute />
+      <Routers />
     </ThemeProvider>
   );
 }

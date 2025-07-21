@@ -116,18 +116,18 @@ export const createRestaurant=(reqData)=>{
 export const updateRestaurant=({restaurantId,restaurantData,jwt})=>{
     
     return async(dispatch)=>{
-        dispatch({type:UPDATE_RESTAURANT_STATUS_REQUEST});
+        dispatch({type:UPDATE_RESTAURANT_REQUEST});
         try{
             const res =await api.put(`api/admin/restaurant/${restaurantId}`, restaurantData, {
                 headers: {
                     Authorization:`Bearer ${jwt}`,
                 },
             });
-            dispatch({type:UPDATE_RESTAURANT_STATUS_SUCCESS,payload:res.data});
+            dispatch({type:UPDATE_RESTAURANT_SUCCESS,payload:res.data});
             
         }catch (error) {
             
-            dispatch({type:UPDATE_RESTAURANT_STATUS_FAILURE ,payload:error})
+            dispatch({type:UPDATE_RESTAURANT_FAILURE ,payload:error})
         }
     }
 }
@@ -153,28 +153,27 @@ export const deleteRestaurant=({restaurantId,jwt})=>{
     }
 }
 
-export const updateRestaurantStatus=({restaurantId,jwt})=>{
-    
-    return async(dispatch)=>{
-        dispatch({type:UPDATE_RESTAURANT_STATUS_REQUEST});
-        try{
-            const res =await api.put(`api/admin/restaurants/${restaurantId}/status`, 
-                {},
-                {
-                headers: {
-                    Authorization:`Bearer ${jwt}`,
-                },
-            });
-            dispatch({type:UPDATE_RESTAURANT_STATUS_SUCCESS,payload:res.data});
-            console.log("resssss ",res.data);
-            
-        }catch (error) {
-            console.log("catch error", error);
-            
-            dispatch({type:UPDATE_RESTAURANT_STATUS_FAILURE ,payload:error})
+export const updateRestaurantStatus = ({ restaurantId, jwt, newStatus }) => {
+  return async (dispatch) => {
+    dispatch({ type: UPDATE_RESTAURANT_STATUS_REQUEST });
+    try {
+      const res = await api.put(
+        `api/admin/restaurants/${restaurantId}/status`,
+        { open: newStatus },  // <-- send new status here
+        {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
         }
+      );
+      dispatch({ type: UPDATE_RESTAURANT_STATUS_SUCCESS, payload: res.data });
+      console.log("Updated restaurant status response:", res.data);
+    } catch (error) {
+      console.log("Error updating status", error);
+      dispatch({ type: UPDATE_RESTAURANT_STATUS_FAILURE, payload: error });
     }
-}
+  };
+};
 
 export const createEventAction=({data,restaurantId,jwt})=>{
     
@@ -270,7 +269,7 @@ export const createCategoryAction=({reqData,jwt})=>{
     return async(dispatch)=>{
         dispatch({type:CREATE_CATEGORY_REQUEST});
         try{
-            const res =await api.get(`/api/admin/category`, reqData,
+            const res =await api.post(`/api/admin/category`, reqData,
                 {
                 headers: {
                     Authorization:`Bearer ${jwt}`,

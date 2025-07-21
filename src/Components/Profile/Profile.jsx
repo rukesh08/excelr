@@ -6,8 +6,11 @@ import Orders from './Orders'
 import Address from './Address'
 import Favorites from './Favorites'
 import Events from './Events'
+import { useSelector } from 'react-redux'
 
 const Profile = () => {
+    const { auth } = useSelector((store) => store);
+      console.log(auth);
     const [openSideBar,setOpenSideBar]=useState(false)
   return (
     <div className='lg:flex justify-between'>
@@ -18,7 +21,7 @@ const Profile = () => {
          <Routes>
             <Route path='/' element={<UserProfile />} />
             <Route path='/orders' element={<Orders />} />
-            <Route path='/address' element={<Address />} />
+            <Route path='/address' element={<Address addresses={auth.user?.addresses || []} />} />
             <Route path='/favorites' element={<Favorites />} />
             <Route path='/events' element={<Events />} /> 
 

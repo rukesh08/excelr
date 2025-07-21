@@ -16,12 +16,15 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { useDispatch } from 'react-redux';
 import { registerUser } from '../State/Authentication/Action';
+import { useEffect } from 'react'; 
+import { jwtDecode } from 'jwt-decode';
 
+const GOOGLE_CLIENT_ID = "597844623024-o3i89jeng839ha57d2iq206fp51ejme4.apps.googleusercontent.com";
 const initialValues = {
     fullName: "",
     email: "",
     password: "",
-    role: ""
+    role: "ROLE_CUSTOMER"
 };
 
 const RegisterForm = () => {
@@ -30,12 +33,40 @@ const RegisterForm = () => {
     const [showPassword, setShowPassword] = useState(false);
 
     const handleSubmit = (values) => {
+        console.log("Submitting user data:", values);
         dispatch(registerUser({userData:values,navigate}))
         console.log("form values", values);
     };
 
     const handleClickShowPassword = () => {
         setShowPassword(prev => !prev);
+    };
+
+    useEffect(() => {
+        window.google?.accounts.id.initialize({
+            client_id: GOOGLE_CLIENT_ID,
+            callback: handleGoogleCallback
+        });
+
+        window.google?.accounts.id.renderButton(
+            document.getElementById("google-signup"),
+            { theme: "outline", size: "large", width: "100%" }
+        );
+    }, []);
+
+       const handleGoogleCallback = (response) => {
+        const decoded = jwtDecode(response.credential);
+        console.log("Google decoded data:", decoded);
+
+        
+        const userData = {
+            fullName: decoded.name,
+            email: decoded.email,
+            password: decoded.sub, 
+            role: "ROLE_CUSTOMER", 
+        };
+        console.log("Registering via Google:", userData);
+        dispatch(registerUser({ userData, navigate }));
     };
 
     return (
@@ -103,6 +134,11 @@ const RegisterForm = () => {
                     </Form>
                 )}
             </Formik>
+
+             <div style={{ margin: '1rem 0' }}>
+                <div id="google-signup" style={{ display: 'flex', justifyContent: 'center' }}></div>
+            </div>
+
             <Typography variant='body2' align='center' sx={{ mt: 3 }}>
                 Already have an account?
                 <Button size='small' onClick={() => navigate("/account/login")}>

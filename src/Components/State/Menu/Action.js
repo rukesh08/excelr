@@ -42,12 +42,24 @@ export const getMenuItemsByRestaurantId=(reqData)=>{
     return async (dispatch)=>{
         dispatch({type:GET_MENU_ITEMS_BY_RESTAURANT_ID_REQUEST});
         try {
-            const { data } = await api.get(`/api/food/restaurant/${reqData.restaurantId}?vegetarian=${reqData.vegetarian}&nonveg=${reqData.nonveg}&seasonal=${reqData.seasonal}&food_category=${reqData.foodCategory}`,
-                {
-                    headers: {
-                        Authorization:`Bearer ${reqData.jwt}`,
-                    },
-                });
+            let url = `/api/food/restaurant/${reqData.restaurantId}`;
+            const params = [];
+
+            if (reqData.vegetarian !== undefined) params.push(`vegetarian=${reqData.vegetarian}`);
+            if (reqData.nonveg !== undefined) params.push(`nonveg=${reqData.nonveg}`);
+            if (reqData.seasonal !== undefined) params.push(`seasonal=${reqData.seasonal}`);
+            if (reqData.foodCategory !== undefined) params.push(`food_category=${reqData.foodCategory}`);
+
+            if (params.length > 0) {
+            url += `?${params.join("&")}`;
+            }
+
+            const { data } = await api.get(url, {
+            headers: {
+                Authorization: `Bearer ${reqData.jwt}`,
+            },
+            });
+
                 console.log("menu item by restaurants", data);
                 dispatch({type:GET_MENU_ITEMS_BY_RESTAURANT_ID_SUCCESS,payload:data})                
         }catch (error) {

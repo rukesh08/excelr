@@ -11,7 +11,8 @@ import {
   LOGOUT,
   REGISTER_FAILURE,
   REGISTER_REQUEST,
-  REGISTER_SUCCESS
+  REGISTER_SUCCESS,
+  UPDATE_ADDRESS,
 } from "./ActionTypes";
 
 import axios from "axios";
@@ -29,7 +30,7 @@ export const registerUser = (reqData) => async (dispatch) => {
     // ✅ Role-based navigation
     switch (data.role) {
       case "ROLE_RESTAURANT_OWNER":
-        reqData.navigate("/admin/restaurant");
+        reqData.navigate("/admin/restaurants");
         break;
       case "ROLE_DELIVERY_PARTNER":
         reqData.navigate("/partner/home");
@@ -61,7 +62,7 @@ export const loginUser = (reqData) => async (dispatch) => {
     //  Role-based navigation
     switch (data.role) {
       case "ROLE_RESTAURANT_OWNER":
-        reqData.navigate("/admin/restaurant");
+        reqData.navigate("/admin/restaurants");
         break;
       case "ROLE_DELIVERY_PARTNER":
         reqData.navigate("/partner/home");
@@ -101,6 +102,8 @@ export const getUser = (jwt) => async (dispatch) => {
   }
 };
 
+
+
 // ADD TO FAVORITE
 export const addToFavorite = ({ jwt, restaurantId }) => async (dispatch) => {
   dispatch({ type: ADD_TO_FAVORITE_REQUEST });
@@ -120,6 +123,21 @@ export const addToFavorite = ({ jwt, restaurantId }) => async (dispatch) => {
     console.error("Add to favorite error:", error);
   }
 };
+
+// UPDATE USER ADDRESS (frontend state only — local update)
+export const updateUserAddress = (updatedAddress) => (dispatch, getState) => {
+  const { auth } = getState();
+
+  const updatedAddresses = auth.user.addresses.map(addr =>
+    addr.id === updatedAddress.id ? updatedAddress : addr
+  );
+
+  const updatedUser = { ...auth.user, addresses: updatedAddresses };
+
+  dispatch({ type: UPDATE_ADDRESS, payload: updatedUser });
+  console.log("Updated address in Redux:", updatedUser);
+};
+
 
 // LOGOUT
 export const logout = () => (dispatch) => {

@@ -84,19 +84,24 @@ export const Cart = () => {
                         <p>Item Total</p>
                         <p>₹{cart.cart.total}</p>
                     </div>
-                    <div className='flex justify-between text-gray-300'>
-                        <p>Delivery Fee</p>
-                        <p>₹29</p>
-                    </div>
-                    <div className='flex justify-between text-gray-300'>
-                        <p>GST & Other Charges</p>
-                        <p>₹33</p>
-                    </div>
-                    <Divider />
-                </div>
-                <div className='flex justify-between text-gray-300'>
-                        <p>TO PAY</p>
-                        <p>₹{cart.cart.total+29+33}</p>
+                    
+                        {cart.cartItems && cart.cartItems.length > 0 && (
+                            <>
+                                <div className='flex justify-between text-gray-300'>
+                                <p>Delivery Fee</p>
+                                <p>₹29</p>
+                                </div>
+                                <div className='flex justify-between text-gray-300'>
+                                <p>GST & Other Charges</p>
+                                <p>₹33</p>
+                                </div>
+                                <Divider />
+                                <div className='flex justify-between text-gray-300'>
+                                <p>TO PAY</p>
+                                <p>₹{cart.cart.total + 29 + 33}</p>
+                                </div>
+                            </>
+                            )}
                     </div>
             </div>
             </section>

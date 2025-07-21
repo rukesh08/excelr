@@ -2,11 +2,14 @@ import * as actionTypes from "./ActionType";
 
 const initialState= {
     restaurants:[],
-    usersRestaurant:null,
+    usersRestaurant:{
+        
+    },
     restaurant:null,
     loading:false,
     error:null,
     restaurantsEvents:[],
+    events:[],
     categories:[],
 };
 
@@ -49,6 +52,7 @@ const restaurantReducer =(state=initialState,action)=>{
         case actionTypes.GET_RESTAURANT_BY_USER_ID_SUCCESS:
         case actionTypes.UPDATE_RESTAURANT_STATUS_SUCCESS:
         case actionTypes.UPDATE_RESTAURANT_SUCCESS:
+            console.log("Reducer received updated restaurant:", action.payload);
             return {
                 ...state,
                 loading:false,
@@ -58,15 +62,17 @@ const restaurantReducer =(state=initialState,action)=>{
         case actionTypes.DELETE_RESTAURANT_SUCCESS:
             return {
                 ...state,
-                error:null,
-                loading:false,
-                restaurants:state.restaurants.filter(
-                    (item)=>item.id!==action.payload
+                error: null,
+                loading: false,
+                restaurants: state.restaurants.filter(
+                (item) => item.id !== action.payload
                 ),
-                usersRestaurant:state.usersRestaurant.filter(
-                    (item)=>item.id!==action.payload
-                ),
+                usersRestaurant:
+                state.usersRestaurant && state.usersRestaurant.id === action.payload
+                    ? null
+                    : state.usersRestaurant,
             };
+
 
         case actionTypes.CREATE_EVENTS_SUCCESS:
             return {

@@ -42,6 +42,7 @@ const cartReducer=(state=initialState,action)=>{
             return {
                 ...state,
                 loading:false,
+                cart:action.payload,
                 cartItems:state.cartItems.map((item)=>
                     item.id===action.payload.id? action.payload:item
                 ),
@@ -51,6 +52,7 @@ const cartReducer=(state=initialState,action)=>{
             return {
                 ...state,
                 loading:false,
+                cart:action.payload,
                 cartItems:state.cartItems.filter((item)=>
                     item.id!==action.payload
                 ),
