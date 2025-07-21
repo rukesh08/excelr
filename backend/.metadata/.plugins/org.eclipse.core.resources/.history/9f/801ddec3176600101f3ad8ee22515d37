@@ -1,0 +1,34 @@
+package com.rukesh.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Value;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
+
+@Service
+public class EmailService {
+
+    @Autowired
+    private JavaMailSender mailSender;
+
+    @Value("${spring.mail.username}")
+    private String fromEmail; // Injected from application.yml
+
+    public void sendInvoiceEmail(String toEmail, String subject, String body, byte[] pdfBytes) throws MessagingException {
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true);  // true = multipart
+
+        helper.setTo(toEmail);
+        helper.setSubject(subject);
+        helper.setText(body);
+        helper.setFrom(fromEmail); 
+
+        helper.addAttachment("invoice.pdf", new ByteArrayResource(pdfBytes));
+
+        mailSender.send(message);
+    }
+}

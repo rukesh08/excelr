@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.rukesh.model.Restaurant;
 import com.rukesh.model.User;
 import com.rukesh.request.CreateRestaurantRequest;
+import com.rukesh.request.UpdateRestaurantStatusRequest;
 import com.rukesh.response.MessageResponse;
 import com.rukesh.service.RestaurantService;
 import com.rukesh.service.UserService;
@@ -34,7 +35,15 @@ public class AdminRestaurantController {
 			@RequestBody CreateRestaurantRequest req,
 			@RequestHeader("Authorization") String jwt
 	)throws Exception{
+		
+		if (req == null) {
+	        throw new IllegalArgumentException("CreateRestaurantRequest cannot be null");
+	    }
 		User user=userService.findUserByJwtToken(jwt);
+		
+		if (user == null) {
+	        throw new IllegalArgumentException("User from JWT token cannot be null");
+	    }
 		
 		Restaurant restaurant=restaurantService.createRestaurant(req, user);
 		return new ResponseEntity<>(restaurant,HttpStatus.CREATED);
@@ -69,16 +78,13 @@ public class AdminRestaurantController {
 	
 	@PutMapping("/{id}/status")
 	public ResponseEntity<Restaurant> updateRestaurantStatus(
-		
-			@RequestHeader("Authorization") String jwt,
-			@PathVariable Long id
-	)throws Exception{
-		User user=userService.findUserByJwtToken(jwt);
-		
-		Restaurant restaurant=restaurantService.updaterestaurantStatus(id);
-		
-		
-		return new ResponseEntity<>(restaurant,HttpStatus.OK);
+	        @RequestHeader("Authorization") String jwt,
+	        @PathVariable Long id,
+	        @RequestBody UpdateRestaurantStatusRequest reqStatus
+	) throws Exception {
+	    User user = userService.findUserByJwtToken(jwt);
+	    Restaurant restaurant = restaurantService.updaterestaurantStatus(id, reqStatus.isOpen());
+	    return new ResponseEntity<>(restaurant, HttpStatus.OK);
 	}
 	
 	@GetMapping("/user")

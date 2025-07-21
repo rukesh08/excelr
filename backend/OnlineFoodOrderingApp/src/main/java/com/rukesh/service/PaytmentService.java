@@ -1,0 +1,10 @@
+package com.rukesh.service;
+
+import com.rukesh.model.Order;
+import com.rukesh.response.PaymentResponse;
+
+public interface PaytmentService {
+	
+	public PaymentResponse createPaymentLink(Order order)throws Exception;
+
+}

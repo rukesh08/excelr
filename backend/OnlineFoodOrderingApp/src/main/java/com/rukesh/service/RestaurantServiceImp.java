@@ -30,6 +30,10 @@ public class RestaurantServiceImp implements RestaurantService {
 	
 	@Override
 	public Restaurant createRestaurant(CreateRestaurantRequest req, User user) {
+		
+		if (req.getAddress() == null) {
+	        throw new IllegalArgumentException("Address in CreateRestaurantRequest cannot be null");
+	    }
 		Address address=addressRepository.save(req.getAddress());
 		
 		Restaurant restaurant=new Restaurant();
@@ -109,39 +113,51 @@ public class RestaurantServiceImp implements RestaurantService {
 
 	@Override
 	public RestaurantDto addToFavorites(Long restaurantId, User user) throws Exception {
-		Restaurant restaurant=findRestaurantById(restaurantId);
-		
-		RestaurantDto dto=new RestaurantDto();
-		dto.setDescription(restaurant.getDescription());
-		dto.setImages(restaurant.getImages());
-		dto.setTitle(restaurant.getName());
-		dto.setId(restaurantId);
-		
-		boolean isFavorited = false;
-		List<RestaurantDto> favorites = user.getFavorites();
-		for(RestaurantDto favorite : favorites ) {
-			if(favorite.getId().equals(restaurantId)) {
-				isFavorited =true;
-				break;
-			}
-		}
-		
-		if(isFavorited) {
-			favorites.removeIf(favorite -> favorite.getId().equals(restaurantId));
-		}else {
-			favorites.add(dto);
-		}
-		
-		userRepository.save(user);
-		return dto;
+	    Restaurant restaurant = findRestaurantById(restaurantId);
+
+	    RestaurantDto dto = new RestaurantDto();
+	    dto.setId(restaurant.getId());
+	    dto.setName(restaurant.getName());
+	    dto.setDescription(restaurant.getDescription());
+	    dto.setImages(restaurant.getImages());
+	    dto.setOpen(restaurant.isOpen());
+	    dto.setCity(restaurant.getAddress().getCity());
+
+	    // Add these logs here to see the DTO values
+	    System.out.println("DTO name: " + dto.getName() + ", open: " + dto.isOpen());
+	    
+	    boolean isFavorited = false;
+	    List<RestaurantDto> favorites = user.getFavorites();
+	    
+	    // Log current favorites before modification
+	    System.out.println("User favorites before modification: " + favorites);
+	    
+	    for (RestaurantDto favorite : favorites) {
+	        if (favorite.getId().equals(restaurantId)) {
+	            isFavorited = true;
+	            break;
+	        }
+	    }
+	    
+	    if (isFavorited) {
+	        favorites.removeIf(favorite -> favorite.getId().equals(restaurantId));
+	    } else {
+	        favorites.add(dto);
+	    }
+
+	    // Log favorites after modification, before saving
+	    System.out.println("User favorites before save: " + favorites);
+
+	    userRepository.save(user);
+	    return dto;
 	}
 
+
 	@Override
-	public Restaurant updaterestaurantStatus(Long id) throws Exception {
-		Restaurant restaurant=findRestaurantById(id);
-		restaurant.setOpen(restaurant.isOpen());
-		
-		return restaurantRepository.save(restaurant);
+	public Restaurant updaterestaurantStatus(Long id, boolean open) throws Exception {
+	    Restaurant restaurant = findRestaurantById(id);
+	    restaurant.setOpen(open); // Set the new status (true or false)
+	    return restaurantRepository.save(restaurant);
 	}
 
 }

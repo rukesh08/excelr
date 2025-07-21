@@ -26,7 +26,7 @@ public class CreateRestaurantRequest {
 	
 	private List<String> images;
 	
-	private boolean open = true; 
+	private boolean open; 
 
 
 	public boolean isOpen() {

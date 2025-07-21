@@ -1,0 +1,31 @@
+package com.rukesh.utils;
+
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.Paragraph;
+
+import java.io.ByteArrayOutputStream;
+
+public class InvoiceGenerator {
+
+    public static byte[] generateInvoice(Long orderId, String customerName, String deliveryAddress, double totalAmount) {
+        try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+            PdfWriter writer = new PdfWriter(baos);
+            PdfDocument pdf = new PdfDocument(writer);
+            Document document = new Document(pdf);
+
+            document.add(new Paragraph("INVOICE"));
+            document.add(new Paragraph("Order ID: " + orderId));
+            document.add(new Paragraph("Customer Name: " + customerName));
+            document.add(new Paragraph("Delivery Address: " + deliveryAddress));
+            document.add(new Paragraph("Total Amount: ₹" + totalAmount));
+            document.add(new Paragraph("Thank you for your order!"));
+
+            document.close();
+            return baos.toByteArray();
+        } catch (Exception e) {
+            throw new RuntimeException("Error generating invoice", e);
+        }
+    }
+}

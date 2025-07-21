@@ -1,0 +1,41 @@
+package com.rukesh.utils;
+
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.Paragraph;
+
+import java.io.File;
+import java.io.FileOutputStream;
+
+public class InvoiceGenerator {
+
+    public static void generateInvoice(Long orderId, String customerName, String deliveryAddress, double totalAmount) {
+        try {
+            // Create invoices directory if it doesn't exist
+            File directory = new File("invoices");
+            if (!directory.exists()) {
+                directory.mkdirs();
+            }
+
+            String filePath = "invoices/order-" + orderId + ".pdf";
+            PdfWriter writer = new PdfWriter(new FileOutputStream(filePath));
+            PdfDocument pdf = new PdfDocument(writer);
+            Document document = new Document(pdf);
+
+            document.add(new Paragraph("INVOICE").setBold().setFontSize(20));
+            document.add(new Paragraph("Order ID: " + orderId));
+            document.add(new Paragraph("Customer Name: " + customerName));
+            document.add(new Paragraph("Delivery Address: " + deliveryAddress));
+            document.add(new Paragraph("Total Amount: ₹" + totalAmount));
+            document.add(new Paragraph("\nThank you for your order!").setItalic());
+
+            document.close();
+
+            System.out.println("Invoice generated at: " + filePath);
+
+        } catch (Exception e) {
+            throw new RuntimeException("Error generating invoice", e);
+        }
+    }
+}

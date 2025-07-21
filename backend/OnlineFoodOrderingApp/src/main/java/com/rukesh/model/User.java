@@ -6,12 +6,15 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.rukesh.dto.RestaurantDto;
+import jakarta.persistence.JoinColumn;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -45,8 +48,9 @@ public class User {
 	@OneToMany(cascade = CascadeType.ALL,mappedBy = "customer")
 	private List<Order> orders = new ArrayList<>();
 	
-	@ElementCollection
-	private List<RestaurantDto>favorites=new ArrayList();
+	@ElementCollection(fetch = FetchType.EAGER)
+	@CollectionTable(name = "user_favorites", joinColumns = @JoinColumn(name = "user_id"))
+	private List<RestaurantDto> favorites = new ArrayList<>();
 	
 	@OneToMany(cascade = CascadeType.ALL,orphanRemoval = true)
 	private List<Address> addresses=new ArrayList<>();

@@ -1,0 +1,5 @@
+package com.rukesh.request;
+
+public class UserSignupRequest {
+
+}

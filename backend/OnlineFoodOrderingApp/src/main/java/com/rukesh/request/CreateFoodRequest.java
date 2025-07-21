@@ -14,7 +14,8 @@ public class CreateFoodRequest {
 	private String description;
 	private Long price;
 	
-	private Category category;
+	private Long categoryId;
+
 	private List<String> images;
 	
 	private Long restaurantId;
@@ -48,12 +49,14 @@ public class CreateFoodRequest {
 		this.price = price;
 	}
 
-	public Category getCategory() {
-		return category;
+	
+
+	public Long getCategoryId() {
+		return categoryId;
 	}
 
-	public void setCategory(Category category) {
-		this.category = category;
+	public void setCategoryId(Long categoryId) {
+		this.categoryId = categoryId;
 	}
 
 	public List<String> getImages() {
