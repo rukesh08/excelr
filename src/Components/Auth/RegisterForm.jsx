@@ -122,6 +122,7 @@ const RegisterForm = () => {
                                 <MenuItem value={"ROLE_CUSTOMER"}>Customer</MenuItem>
                                 <MenuItem value={"ROLE_RESTAURANT_OWNER"}>Restaurant Owner</MenuItem>
                                 <MenuItem value={"ROLE_DELIVERY_PARTNER"}>Delivery Partner</MenuItem>
+                                <MenuItem value={"ROLE_ADMIN"}>Admin</MenuItem>
                             </Select>
                         </FormControl>
                         <Button sx={{ mt: 2, padding: "1rem" }} fullWidth type='submit' variant='contained'>

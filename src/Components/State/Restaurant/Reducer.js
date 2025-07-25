@@ -120,6 +120,14 @@ const restaurantReducer =(state=initialState,action)=>{
                 categories:action.payload,
             };
 
+        case actionTypes.GET_RESTAURANTS_REQUEST:
+            return { ...state, loading: true };
+        case actionTypes.GET_RESTAURANTS_SUCCESS:
+            return { ...state, loading: false, restaurants: action.payload };
+        case actionTypes.GET_RESTAURANTS_FAILURE:
+            return { ...state, loading: false, error: action.payload };
+
+
         case actionTypes.CREATE_RESTAURANT_FAILURE:
         case actionTypes.GET_ALL_RESTAURANT_FAILURE:
         case actionTypes.DELETE_RESTAURANT_FAILURE:

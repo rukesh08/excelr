@@ -1,6 +1,6 @@
 
 import { api } from "../../Config/Api";
-import { CREATE_RESTAURANT_FAILURE, CREATE_RESTAURANT_REQUEST, CREATE_RESTAURANT_SUCCESS, DELETE_RESTAURANT_FAILURE, DELETE_RESTAURANT_REQUEST, DELETE_RESTAURANT_SUCCESS, GET_RESTAURANT_BY_ID_FAILURE, GET_RESTAURANT_BY_ID_REQUEST, GET_RESTAURANT_BY_ID_SUCCESS, UPDATE_RESTAURANT_FAILURE, UPDATE_RESTAURANT_REQUEST, UPDATE_RESTAURANT_SUCCESS } from "./ActionType";
+import { CREATE_RESTAURANT_FAILURE, CREATE_RESTAURANT_REQUEST, CREATE_RESTAURANT_SUCCESS, DELETE_RESTAURANT_FAILURE, DELETE_RESTAURANT_REQUEST, DELETE_RESTAURANT_SUCCESS, GET_RESTAURANT_BY_ID_FAILURE, GET_RESTAURANT_BY_ID_REQUEST, GET_RESTAURANT_BY_ID_SUCCESS, GET_RESTAURANTS_FAILURE, GET_RESTAURANTS_REQUEST, GET_RESTAURANTS_SUCCESS, UPDATE_RESTAURANT_FAILURE, UPDATE_RESTAURANT_REQUEST, UPDATE_RESTAURANT_SUCCESS } from "./ActionType";
 
 
 import {
@@ -33,6 +33,55 @@ import {
     GET_ALL_RESTAURANT_FAILURE,
 
 } from "./ActionType";
+
+
+export const fetchRestaurantsBasedOnRole = (jwt, role) => {
+  return async (dispatch) => {
+    dispatch({ type: GET_RESTAURANTS_REQUEST });
+    console.log("Fetching restaurants for role:", role);
+
+    if (!role) {
+      console.error("Missing role in fetchRestaurantsBasedOnRole");
+      dispatch({
+        type: GET_RESTAURANTS_FAILURE,
+        payload: "User role is missing. Cannot fetch restaurants.",
+      });
+      return;
+    }
+
+    try {
+      let endpoint;
+      if (role === 'ROLE_ADMIN') {
+        endpoint = '/api/admin';
+      } else if (role === 'ROLE_RESTAURANT_OWNER') {
+        endpoint = '/api/admin/user-owned';
+      } else {
+        throw new Error("Unsupported role: " + role);
+      }
+
+      const { data } = await api.get(endpoint, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      });
+      console.log("Fetched restaurants data:", data);
+
+      dispatch({
+        type: GET_RESTAURANTS_SUCCESS,
+        payload: role === 'ROLE_ADMIN' ? data : [data],
+      });
+
+    } catch (error) {
+        console.error("Error fetching restaurants:", error);
+      dispatch({
+        type: GET_RESTAURANTS_FAILURE,
+        payload: error.response?.data?.message || error.message,
+      });
+    }
+  };
+};
+
+
 
 export const getAllRestaurantsAction=(token)=>{
     return async(dispatch)=>{

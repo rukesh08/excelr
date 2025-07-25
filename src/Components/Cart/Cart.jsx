@@ -82,7 +82,7 @@ export const Cart = () => {
   const restaurantId = cart?.cartItems?.[0]?.food?.restaurant?.id;
 
   if (!restaurantId) {
-    alert("Unable to place order: Restaurant ID missing.");
+    alert("Unable to place order: Your cart is Empty.");
     return;
   }
 

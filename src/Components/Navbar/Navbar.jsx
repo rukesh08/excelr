@@ -1,5 +1,5 @@
 import { Avatar, Badge, Box, IconButton } from '@mui/material'
-import React from 'react'
+import React, { useState } from 'react'
 import SearchIcon from '@mui/icons-material/Search';
 import logo from '../../Pages/assets/logo.png'
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
@@ -7,14 +7,28 @@ import { Person } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 const Navbar = () => {
-const navigate=useNavigate();
-const {auth,cart}=useSelector(store=>store)
-const cartItems = useSelector((state) => state.cart.cart?.items || []);
-
+    const navigate=useNavigate();
+    const {auth,cart}=useSelector(store=>store)
+    const cartItems = useSelector((state) => state.cart.cart?.items || []);
+    const [clickCount, setClickCount] = useState(0);
 const handleAvatarClick=()=>{
     if(auth.user?.role==="ROLE_CUSTOMER"){
         navigate("/my-profile")
     }
+     else if(auth.user?.role==="ROLE_ADMIN"){
+        setClickCount(prev => {
+        const newCount = prev + 1;
+
+        if (newCount % 2 === 0) {
+          navigate("/admin/logout");
+        } else {
+          navigate("/admin/dashboard");
+        }
+
+        return newCount;
+      });
+    }
+
     else if(auth.user?.role==="ROLE_RESTAURANT_OWNER"){
         navigate("/admin/restaurants")
     }else{

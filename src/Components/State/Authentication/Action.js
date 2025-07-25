@@ -26,6 +26,10 @@ export const registerUser = (reqData) => async (dispatch) => {
     const { data } = await axios.post(`${API_URL}/auth/signup`, reqData.userData);
 
     if (data.jwt) localStorage.setItem("jwt", data.jwt);
+    if (data.role === "ROLE_ADMIN") {
+      throw new Error("You are not authorized to register as admin.");
+    }
+
 
     // ✅ Role-based navigation
     switch (data.role) {
@@ -57,6 +61,11 @@ export const registerUserGoogle = (reqData) => async (dispatch) => {
     const { data } = await axios.post(`${API_URL}/auth/google`, reqData.userData);
 
     if (data.jwt) localStorage.setItem("jwt", data.jwt);
+
+    if (data.role === "ROLE_ADMIN") {
+      throw new Error("You are not authorized to register as admin.");
+    }
+
 
     switch (data.role) {
       case "ROLE_RESTAURANT_OWNER":
@@ -91,6 +100,9 @@ export const loginUser = (reqData) => async (dispatch) => {
 
     //  Role-based navigation
     switch (data.role) {
+      case "ROLE_ADMIN":
+        reqData.navigate("/admin/dashboard");
+        break;
       case "ROLE_RESTAURANT_OWNER":
         reqData.navigate("/admin/restaurants");
         break;
