@@ -21,23 +21,25 @@ import jakarta.servlet.http.HttpServletRequest;
 @EnableWebSecurity
 public class AppConfig {
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+	@Bean
+	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-        http
-            .sessionManagement(management ->
-                management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authorizeHttpRequests(auth ->
-                auth
-                    .requestMatchers("/api/admin/**").hasAnyRole("RESTAURANT_OWNER", "ADMIN")
-                    .requestMatchers("/api/**").authenticated()
-                    .anyRequest().permitAll())
-            .addFilterBefore(new JwtTokenValidator(), BasicAuthenticationFilter.class)
-            .csrf(csrf -> csrf.disable())
-            .cors(cors -> cors.configurationSource(corsConfigurationSource()));
+	    http
+	        .sessionManagement(management ->
+	            management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+	        .authorizeHttpRequests(auth ->
+	            auth
+	                .requestMatchers("/auth/**").permitAll() 
+	                .requestMatchers("/api/admin/**").hasAnyAuthority("ROLE_RESTAURANT_OWNER", "ROLE_ADMIN")
+	                .requestMatchers("/api/**").authenticated()
+	                .anyRequest().permitAll())
+	        .addFilterBefore(new JwtTokenValidator(), BasicAuthenticationFilter.class)
+	        .csrf(csrf -> csrf.disable())
+	        .cors(cors -> cors.configurationSource(corsConfigurationSource()));
 
-        return http.build();
-    }
+	    return http.build();
+	}
+
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {

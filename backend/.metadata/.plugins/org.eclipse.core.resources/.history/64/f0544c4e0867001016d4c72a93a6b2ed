@@ -1,0 +1,5 @@
+package com.rukesh.model.enums;
+
+public class RestaurantStatus {
+
+}

@@ -25,7 +25,7 @@ public class PaymentServiceImpl implements PaytmentService {
 				SessionCreateParams.
 				PaymentMethodType.CARD)
 				.setMode(SessionCreateParams.Mode.PAYMENT)
-				.setSuccessUrl("http://localhost:3000/payment/success/"+order.getId())
+				.setSuccessUrl("http://localhost:3000/payment/success/" + order.getId() + "?session_id={CHECKOUT_SESSION_ID}")
 				.setCancelUrl("http://localhost:3000/payment/fail/")
 				.addLineItem(SessionCreateParams.LineItem.builder()
 						.setQuantity(1L).setPriceData(SessionCreateParams.LineItem.PriceData.builder()

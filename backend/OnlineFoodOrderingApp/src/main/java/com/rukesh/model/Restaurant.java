@@ -3,8 +3,11 @@ package com.rukesh.model;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
+import com.rukesh.model.enums.RestaurantStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.EnumType;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -29,6 +32,8 @@ public class Restaurant {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	
+	private boolean approved;
 	
 	@OneToOne
 	private User owner;
@@ -57,6 +62,10 @@ public class Restaurant {
 	private LocalDateTime registrationDate;
 	
 	private boolean open;
+	
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
+	private RestaurantStatus status = RestaurantStatus.PENDING;
 	
 	@JsonIgnore
 	@OneToMany(mappedBy = "restaurant",cascade = CascadeType.ALL)
@@ -165,6 +174,26 @@ public class Restaurant {
 	public void setFoods(List<Food> foods) {
 		this.foods = foods;
 	}
+
+	public RestaurantStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(RestaurantStatus status) {
+		this.status = status;
+	}
+
+	public boolean isApproved() {
+		return approved;
+	}
+
+	public void setApproved(boolean approved) {
+		this.approved = approved;
+	}
+
+	
+	
+	
 	
 	
 	

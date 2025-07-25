@@ -1,0 +1,23 @@
+package com.rukesh.repository;
+
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+
+import com.rukesh.dto.MonthlyOrderStats;
+import com.rukesh.model.Order;
+
+public interface OrderRepository extends JpaRepository<Order, Long>{
+	
+	public List<Order> findByCustomerId(Long userId);
+	
+	public List<Order> findByRestaurantId(Long RestaurantId);
+	
+	@Query("SELECT new com.rukesh.dto.MonthlyOrderStats(FUNCTION('TO_CHAR', o.createdAt, 'Mon'), COUNT(o)) " +
+		       "FROM Order o GROUP BY FUNCTION('TO_CHAR', o.createdAt, 'Mon') ORDER BY MIN(o.createdAt)")
+		List<MonthlyOrderStats> getMonthlyOrderStats();
+
+	
+	
+}

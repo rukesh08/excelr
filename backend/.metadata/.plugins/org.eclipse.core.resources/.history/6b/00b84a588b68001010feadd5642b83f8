@@ -1,0 +1,14 @@
+package com.rukesh.service;
+
+import java.util.List;
+
+import com.rukesh.dto.AdminDashboardResponse;
+
+
+
+public interface AdminDashboardService {
+	
+	AdminDashboardResponse getDashboardData(String userRole);
+    
+  
+}

@@ -1,0 +1,33 @@
+package com.rukesh.controller;
+
+import com.rukesh.dto.AdminStatsResponse;
+import com.rukesh.model.enums.RestaurantStatus;
+import com.rukesh.repository.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/api/admin")
+@CrossOrigin(origins = "*")
+public class AdminController {
+
+    @Autowired private UserRepository userRepository;
+    @Autowired private RestaurantRepository restaurantRepository;
+    @Autowired private OrderRepository orderRepository;
+    @Autowired private PaymentRepository paymentRepository;
+    
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/stats")
+    public AdminStatsResponse getDashboardStats() {
+        AdminStatsResponse response = new AdminStatsResponse();
+        response.setTotalUsers(userRepository.count());
+        response.setTotalRestaurants(restaurantRepository.count());
+        response.setApprovedRestaurants(restaurantRepository.countByStatus(RestaurantStatus.APPROVED));
+        response.setPendingRestaurants(restaurantRepository.countByStatus(RestaurantStatus.PENDING));
+        response.setTotalOrders(orderRepository.count());
+        response.setTotalPayments(paymentRepository.count());
+        response.setTotalPaymentAmount(paymentRepository.sumTotalAmount());
+        return response;
+    }
+}

@@ -1,0 +1,30 @@
+package com.rukesh.contoller;
+
+import com.rukesh.service.AdminDashboardService;
+import com.rukesh.dto.AdminDashboardResponse;
+import com.rukesh.dto.MonthlyOrderStats;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/api/admin")
+public class AdminDashboardController {
+
+    @Autowired
+    private AdminDashboardService adminDashboardService;
+
+    @GetMapping("/dashboard")
+    public AdminDashboardResponse getDashboardMetrics() {
+        return adminDashboardService.getDashboardData();
+    }
+    
+    @GetMapping("/dashboard/monthly-orders")
+    public ResponseEntity<List<MonthlyOrderStats>> getMonthlyOrders() {
+        List<MonthlyOrderStats> stats = adminDashboardService.getMonthlyOrderStats();
+        return ResponseEntity.ok(stats);
+    }
+}

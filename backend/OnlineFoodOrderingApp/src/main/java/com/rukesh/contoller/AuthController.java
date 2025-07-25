@@ -59,15 +59,13 @@ public class AuthController {
         createdUser.setFullName(user.getFullName());
 
         // 3) Assign default role if not provided
-        USER_ROLE assignedRole = USER_ROLE.ROLE_CUSTOMER;
-        try {
-            if (user.getRole() != null) {
-                assignedRole = USER_ROLE.valueOf(user.getRole().name()); // Safe assignment
-            }
-        } catch (IllegalArgumentException e) {
-            System.out.println("Invalid role received, defaulting to ROLE_CUSTOMER");
+        USER_ROLE requestedRole = user.getRole() != null ? user.getRole() : USER_ROLE.ROLE_CUSTOMER;
+        if (requestedRole == USER_ROLE.ROLE_ADMIN) {
+            throw new RuntimeException("Cannot assign admin role during registration.");
         }
-        createdUser.setRole(assignedRole);
+
+        
+        createdUser.setRole(requestedRole);
 
         // 4) Encode password
         createdUser.setPassword(passwordEncoder.encode(user.getPassword()));

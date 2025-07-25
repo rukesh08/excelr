@@ -1,0 +1,19 @@
+package com.rukesh.contoller;
+
+import com.rukesh.service.AdminDashboardService;
+import com.rukesh.dto.AdminDashboardResponse;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/api/admin")
+public class AdminDashboardController {
+
+    @Autowired
+    private AdminDashboardService adminDashboardService;
+
+    @GetMapping("/dashboard")
+    public AdminDashboardResponse getDashboardMetrics() {
+        return adminDashboardService.getDashboardData();
+    }
+}

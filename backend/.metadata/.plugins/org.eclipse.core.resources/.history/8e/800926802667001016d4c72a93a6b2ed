@@ -1,0 +1,13 @@
+package com.rukesh.service;
+
+import java.util.List;
+
+import com.rukesh.dto.AdminDashboardResponse;
+import com.rukesh.repository.OrderRepository.MonthlyOrderStats;
+
+
+public interface AdminDashboardService {
+    AdminDashboardResponse getDashboardData();
+    
+  
+}

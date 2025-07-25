@@ -1,0 +1,66 @@
+package com.rukesh.service;
+
+import com.rukesh.dto.AdminDashboardResponse;
+import com.rukesh.dto.PendingRestaurantDTO;
+import com.rukesh.model.enums.RestaurantStatus;
+import com.rukesh.repository.OrderRepository;
+
+import com.rukesh.repository.PaymentRepository;
+import com.rukesh.repository.RestaurantRepository;
+import com.rukesh.repository.UserRepository;
+import com.rukesh.service.AdminDashboardService;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+public class AdminDashboardServiceImpl implements AdminDashboardService {
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private RestaurantRepository restaurantRepository;
+
+    @Autowired
+    private OrderRepository orderRepository;
+
+    @Autowired
+    private PaymentRepository paymentRepository;
+
+    @Override
+    @Transactional(readOnly = true)
+    public AdminDashboardResponse getDashboardData(String userRole) {
+        long totalUsers = userRepository.count();
+        long totalRestaurants = restaurantRepository.count();
+        long approvedRestaurants = restaurantRepository.countByApprovedTrue();
+        long pendingRestaurants = totalRestaurants - approvedRestaurants;
+        long totalOrders = orderRepository.count();
+        double totalPayments = paymentRepository.sumTotalAmount();
+
+        List<PendingRestaurantDTO> pendingList = restaurantRepository
+                .findByStatus(RestaurantStatus.PENDING)
+                .stream()
+                .map(r -> new PendingRestaurantDTO(
+                    r.getId(),
+                    r.getName(),
+                    r.getOwner() != null ? r.getOwner().getEmail() : "N/A",
+                    r.getOwner() != null ? r.getOwner().getFullName() : "N/A"
+                ))
+                .toList();
+
+        return new AdminDashboardResponse(
+            userRole,
+            totalUsers, totalRestaurants, approvedRestaurants,
+            pendingRestaurants, totalOrders, totalPayments,
+            pendingList
+        );
+    }
+
+	
+
+
+}

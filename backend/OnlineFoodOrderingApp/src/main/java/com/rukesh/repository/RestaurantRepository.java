@@ -1,9 +1,12 @@
 package com.rukesh.repository;
 
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import com.rukesh.model.Restaurant;
+import com.rukesh.model.enums.RestaurantStatus;
 
 public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
 
@@ -11,5 +14,12 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
 	List<Restaurant> findBySearchQuery(String query);
 
 
-    Restaurant findByOwnerId(Long userId);
+   
+    
+    long countByApprovedTrue();
+    
+    List<Restaurant> findByStatus(RestaurantStatus status);
+    
+    Restaurant findByOwnerId(Long ownerId);
+
 }

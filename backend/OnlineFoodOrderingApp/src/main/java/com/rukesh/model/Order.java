@@ -1,6 +1,7 @@
 package com.rukesh.model;
 
-import java.sql.Date;
+
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -40,7 +41,7 @@ public class Order {
 	
 	private String orderStatus;
 	
-	private Date createdAt;
+	private LocalDateTime createdAt;
 	
 	@ManyToOne
 	private Address deliveryAddress;
@@ -106,12 +107,15 @@ public class Order {
 	}
 
 
-	public Date getCreatedAt() {
+	
+
+
+	public LocalDateTime getCreatedAt() {
 		return createdAt;
 	}
 
 
-	public void setCreatedAt(Date createdAt) {
+	public void setCreatedAt(LocalDateTime createdAt) {
 		this.createdAt = createdAt;
 	}
 

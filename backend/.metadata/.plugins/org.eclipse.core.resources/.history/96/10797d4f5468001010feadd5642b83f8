@@ -1,0 +1,71 @@
+package com.rukesh.dto;
+
+
+public class AdminDashboardResponse {
+    private long totalUsers;
+    private long totalRestaurants;
+    private long approvedRestaurants;
+    private long pendingRestaurants;
+    private long totalOrders;
+    private double totalPayments;
+
+    
+    public AdminDashboardResponse(long totalUsers, long totalRestaurants, long approvedRestaurants,
+                                  long pendingRestaurants, long totalOrders, double totalPayments) {
+        this.totalUsers = totalUsers;
+        this.totalRestaurants = totalRestaurants;
+        this.approvedRestaurants = approvedRestaurants;
+        this.pendingRestaurants = pendingRestaurants;
+        this.totalOrders = totalOrders;
+        this.totalPayments = totalPayments;
+    }
+
+    // ✅ Getters and setters
+    public long getTotalUsers() {
+        return totalUsers;
+    }
+
+    public void setTotalUsers(long totalUsers) {
+        this.totalUsers = totalUsers;
+    }
+
+    public long getTotalRestaurants() {
+        return totalRestaurants;
+    }
+
+    public void setTotalRestaurants(long totalRestaurants) {
+        this.totalRestaurants = totalRestaurants;
+    }
+
+    public long getApprovedRestaurants() {
+        return approvedRestaurants;
+    }
+
+    public void setApprovedRestaurants(long approvedRestaurants) {
+        this.approvedRestaurants = approvedRestaurants;
+    }
+
+    public long getPendingRestaurants() {
+        return pendingRestaurants;
+    }
+
+    public void setPendingRestaurants(long pendingRestaurants) {
+        this.pendingRestaurants = pendingRestaurants;
+    }
+
+    public long getTotalOrders() {
+        return totalOrders;
+    }
+
+    public void setTotalOrders(long totalOrders) {
+        this.totalOrders = totalOrders;
+    }
+
+    public double getTotalPayments() {
+        return totalPayments;
+    }
+
+    public void setTotalPayments(double totalPayments) {
+        this.totalPayments = totalPayments;
+    }
+}

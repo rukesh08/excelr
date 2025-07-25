@@ -1,0 +1,27 @@
+package com.rukesh.dto;
+
+public class MonthlyOrderStats {
+    private String month;
+    private long orders;
+
+    public MonthlyOrderStats(String month, long orders) {
+        this.month = month;
+        this.orders = orders;
+    }
+
+    public String getMonth() {
+        return month;
+    }
+
+    public void setMonth(String month) {
+        this.month = month;
+    }
+
+    public long getOrders() {
+        return orders;
+    }
+
+    public void setOrders(long orders) {
+        this.orders = orders;
+    }
+}
