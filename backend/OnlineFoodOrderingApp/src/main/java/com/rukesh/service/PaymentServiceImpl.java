@@ -20,6 +20,7 @@ public class PaymentServiceImpl implements PaytmentService {
 	public PaymentResponse createPaymentLink(Order order) throws StripeException {
 		
 		Stripe.apiKey=stripeSecretKey;
+		int deliveryFee=62;
 		
 		SessionCreateParams params=SessionCreateParams.builder().addPaymentMethodType(
 				SessionCreateParams.
@@ -30,7 +31,7 @@ public class PaymentServiceImpl implements PaytmentService {
 				.addLineItem(SessionCreateParams.LineItem.builder()
 						.setQuantity(1L).setPriceData(SessionCreateParams.LineItem.PriceData.builder()
 								.setCurrency("inr")
-								.setUnitAmount((Long)order.getTotalPrice()*100)
+								.setUnitAmount((Long)order.getTotalPrice()*100+deliveryFee*100)
 								.setProductData(SessionCreateParams.LineItem.PriceData.ProductData.builder()
 										.setName("tomato")
 										.build())
