@@ -1,6 +1,5 @@
 package com.rukesh.service;
 
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -55,7 +54,7 @@ public class OrderServiceImpl implements OrderService{
 		Restaurant restaurant=restaurantService.findRestaurantById(order.getRestaurantId());
 		Order createOrder=new Order();
 		createOrder.setCustomer(user);
-		createOrder.setCreatedAt(new Date(System.currentTimeMillis()));
+		createOrder.setCreatedAt(java.time.LocalDateTime.now());
 		createOrder.setOrderStatus("PENDING");
 		createOrder.setDeliveryAddress(savedAddress);
 		createOrder.setRestaurant(restaurant);
